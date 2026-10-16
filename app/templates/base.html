@@ -8,20 +8,22 @@ body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f0f2f5;color:#2
 .header{background:#0b3d6e;color:#fff;padding:14px 28px}
 .header h1{margin:0;font-size:22px}
 .header .sub{font-size:13px;color:#cfe0f3}
-.band{background:#f7931e;height:5px}
+.band{height:5px;background:linear-gradient(90deg, #FF9933 0%, #FF9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%, #138808 100%)}
 .container{max-width:860px;margin:24px auto;background:#fff;padding:28px;
-border:1px solid #d7dbe0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.btn{background:#0b3d6e;color:#fff;border:none;padding:10px 22px;font-size:15px;cursor:pointer}
-.btn:hover{background:#0d4a85}
+border:1px solid #d7dbe0;box-shadow:0 2px 10px rgba(0,0,0,.06);border-radius:8px}
+.btn{background:linear-gradient(135deg, #0b3d6e 0%, #1565c0 100%);color:#fff;border:none;padding:10px 22px;font-size:15px;cursor:pointer;border-radius:6px;transition:all 0.2s}
+.btn:hover{background:linear-gradient(135deg, #0d4a85 0%, #1976d2 100%);box-shadow:0 3px 8px rgba(13,74,133,0.3)}
 label{display:block;margin:12px 0 4px;font-weight:bold;font-size:14px}
-input[type=text],input[type=password],select{width:100%;max-width:420px;padding:8px;
-border:1px solid #aab;font-size:14px}
-.flash{background:#fdecea;border:1px solid #e57373;color:#a33;padding:10px 14px;margin:14px 0}
+input[type=text],input[type=password],select{width:100%;max-width:420px;padding:9px;
+border:1px solid #aab;font-size:14px;border-radius:5px}
+input[type=text]:focus,input[type=password]:focus,select:focus{border-color:#ff8800;outline:none;box-shadow:0 0 0 3px rgba(255,136,0,0.15)}
+.flash{background:#fdecea;border:1px solid #e57373;color:#a33;padding:10px 14px;margin:14px 0;border-radius:6px}
 .note{font-size:13px;color:#555}
 .footer{max-width:860px;margin:10px auto 40px;font-size:12px;color:#666;text-align:center}
-.footer a{color:#0b3d6e;margin:0 8px}
+.footer a{color:#0b3d6e;margin:0 8px;font-weight:600;text-decoration:none}
+.footer a:hover{color:#ff8800;text-decoration:underline}
 table.tbl{border-collapse:collapse;width:100%}
-table.tbl td,table.tbl th{border:1px solid #ccd;padding:7px 10px;font-size:14px;text-align:left}
+table.tbl td,table.tbl th{border:1px solid #ccd;padding:8px 12px;font-size:14px;text-align:left}
 .steps{font-size:13px;color:#777;margin-bottom:18px}
 .steps b{color:#0b3d6e}
 </style>
@@ -29,8 +31,8 @@ table.tbl td,table.tbl th{border:1px solid #ccd;padding:7px 10px;font-size:14px;
 <body>
 <div class="header">
   <div style="float: right; margin-top: 4px;">
-    <a href="/assistant" style="background:#f7931e; color:white; padding:7px 14px; border-radius:4px; text-decoration:none; font-weight:bold; font-size:13px;">🤖 AI Pension Assistant</a>
-    <a href="/eval-dashboard" style="background:rgba(255,255,255,0.2); color:white; padding:7px 12px; border-radius:4px; text-decoration:none; margin-left:6px; font-size:13px;">📊 Eval Dashboard</a>
+    <a href="/assistant" style="background:linear-gradient(135deg, #FF9933 0%, #FF6600 100%); color:white; padding:8px 16px; border-radius:6px; text-decoration:none; font-weight:bold; font-size:13px; box-shadow:0 2px 8px rgba(255,136,0,0.4);">🤖 AI Pension Assistant</a>
+    <a href="/eval-dashboard" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:white; padding:7px 14px; border-radius:6px; text-decoration:none; margin-left:8px; font-size:13px;">📊 Eval Dashboard</a>
   </div>
   <h1>Sewa Setu &mdash; Old Age Pension Portal</h1>
   <div class="sub">Department of Social Welfare &middot; Government of Purvanchal</div>

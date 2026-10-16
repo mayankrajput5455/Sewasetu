@@ -5,139 +5,202 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sewa Setu AI Assistant — Citizen & Officer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --primary: #0b3d6e;
-    --primary-light: #1565c0;
-    --accent: #f7931e;
-    --accent-hover: #e08215;
-    --bg-main: #f0f4f8;
+    --primary: #0b2d52;
+    --primary-light: #154c79;
+    --saffron: #ff8800;
+    --saffron-dark: #e65100;
+    --saffron-light: #fff3e0;
+    --saffron-gradient: linear-gradient(135deg, #ff9933 0%, #ff6600 100%);
+    --bg-main: #f8fafc;
     --chat-bg: #ffffff;
-    --user-bubble: #1565c0;
-    --assistant-bubble: #f1f5f9;
-    --text-dark: #1e293b;
+    --user-bubble: linear-gradient(135deg, #0b3d6e 0%, #1565c0 100%);
+    --assistant-bubble: #ffffff;
+    --text-dark: #0f172a;
     --text-muted: #64748b;
     --border: #e2e8f0;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+    --shadow-md: 0 10px 30px -5px rgba(11, 45, 82, 0.08), 0 4px 6px -2px rgba(0,0,0,0.03);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     background: var(--bg-main);
     color: var(--text-dark);
     height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+  }
+  /* Top Indian National Saffron Ribbon */
+  .tricolor-ribbon {
+    height: 4px;
+    background: linear-gradient(90deg, #FF9933 0%, #FF9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%, #138808 100%);
+    width: 100%;
   }
   header {
     background: var(--primary);
     color: white;
-    padding: 14px 28px;
+    padding: 14px 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 20px rgba(11, 45, 82, 0.18);
+    position: relative;
+    z-index: 10;
   }
   .brand {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
   }
-  .brand-badge {
-    background: var(--accent);
+  .brand-logo-emblem {
+    background: var(--saffron-gradient);
     color: white;
-    font-weight: 700;
-    font-size: 14px;
-    padding: 6px 10px;
-    border-radius: 6px;
-    letter-spacing: 0.5px;
+    font-weight: 800;
+    font-size: 15px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    letter-spacing: 0.8px;
+    box-shadow: 0 2px 10px rgba(255, 136, 0, 0.35);
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
-  .brand-text h1 { font-size: 17px; font-weight: 600; }
-  .brand-text p { font-size: 12px; opacity: 0.8; }
-  .nav-links { display: flex; gap: 16px; align-items: center; }
+  .brand-text h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.2px; }
+  .brand-text p { font-size: 12px; color: #94a3b8; font-weight: 500; }
+  .nav-links { display: flex; gap: 12px; align-items: center; }
   .nav-links a {
-    color: white;
+    color: #e2e8f0;
     text-decoration: none;
     font-size: 13px;
-    padding: 6px 12px;
-    border-radius: 6px;
-    background: rgba(255,255,255,0.1);
-    transition: all 0.2s;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .nav-links a:hover { background: rgba(255,255,255,0.25); }
+  .nav-links a:hover {
+    background: var(--saffron-gradient);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 136, 0, 0.3);
+  }
+  .chat-wrapper {
+    flex: 1;
+    max-width: 960px;
+    width: 100%;
+    margin: 16px auto;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 100px);
+  }
   .chat-container {
     flex: 1;
-    max-width: 900px;
-    width: 100%;
-    margin: 20px auto;
     background: var(--chat-bg);
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
     display: flex;
     flex-direction: column;
     overflow: hidden;
     border: 1px solid var(--border);
+    position: relative;
   }
   .mode-switch {
-    background: #f8fafc;
+    background: #fdfefe;
     border-bottom: 1px solid var(--border);
-    padding: 10px 20px;
+    padding: 12px 24px;
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
     font-size: 13px;
   }
+  .mode-label {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
   .mode-btn {
-    padding: 6px 14px;
-    border-radius: 20px;
+    padding: 7px 16px;
+    border-radius: 30px;
     border: 1px solid var(--border);
     background: white;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    color: var(--text-dark);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .mode-btn:hover {
+    border-color: var(--saffron);
+    color: var(--saffron-dark);
   }
   .mode-btn.active {
-    background: var(--primary-light);
+    background: var(--saffron-gradient);
     color: white;
-    border-color: var(--primary-light);
+    border-color: transparent;
+    box-shadow: 0 2px 8px rgba(255, 136, 0, 0.35);
   }
   .quick-chips {
-    padding: 10px 20px;
-    background: #f8fafc;
-    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    background: #faf8f5;
+    border-bottom: 1px solid #f1ece4;
     display: flex;
-    gap: 8px;
+    gap: 10px;
     overflow-x: auto;
     white-space: nowrap;
+    scrollbar-width: thin;
   }
   .chip {
-    padding: 5px 12px;
+    padding: 6px 14px;
     background: white;
-    border: 1px solid #cbd5e1;
-    border-radius: 16px;
+    border: 1px solid #e2d9cd;
+    border-radius: 20px;
     font-size: 12px;
-    color: var(--text-dark);
+    font-weight: 500;
+    color: #475569;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: var(--shadow-sm);
   }
   .chip:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--saffron);
+    color: var(--saffron-dark);
+    background: var(--saffron-light);
     transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(255, 136, 0, 0.15);
   }
   .messages-area {
     flex: 1;
-    padding: 24px;
+    padding: 24px 28px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
+    background: radial-gradient(circle at top right, rgba(255, 153, 51, 0.03) 0%, transparent 60%);
   }
   .message {
     display: flex;
     flex-direction: column;
-    max-width: 78%;
+    max-width: 82%;
+    animation: fadeIn 0.25s ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   .message.user {
     align-self: flex-end;
@@ -145,7 +208,8 @@
   .message.user .bubble {
     background: var(--user-bubble);
     color: white;
-    border-radius: 14px 14px 2px 14px;
+    border-radius: 16px 16px 4px 16px;
+    box-shadow: 0 3px 10px rgba(11, 61, 110, 0.15);
   }
   .message.assistant {
     align-self: flex-start;
@@ -153,71 +217,105 @@
   .message.assistant .bubble {
     background: var(--assistant-bubble);
     color: var(--text-dark);
-    border-radius: 14px 14px 14px 2px;
+    border-radius: 16px 16px 16px 4px;
     border: 1px solid #e2e8f0;
+    border-left: 4px solid var(--saffron);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
   .bubble {
-    padding: 12px 16px;
+    padding: 14px 18px;
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.55;
     word-break: break-word;
   }
   .bubble p { margin-bottom: 8px; }
   .bubble p:last-child { margin-bottom: 0; }
   .bubble ul { margin-left: 20px; margin-bottom: 8px; }
+  .bubble strong { color: #0b2d52; }
+  .message.user .bubble strong { color: #ffffff; }
   .tool-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     font-size: 11px;
     font-family: 'JetBrains Mono', monospace;
-    background: #fef3c7;
-    color: #92400e;
+    background: #fff8eb;
+    color: #b45309;
     border: 1px solid #fde68a;
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-top: 6px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-top: 8px;
+    box-shadow: 0 1px 3px rgba(180, 83, 9, 0.08);
+  }
+  .tool-badge::before {
+    content: "⚡";
+    color: var(--saffron);
   }
   .input-bar {
-    padding: 16px 20px;
+    padding: 16px 24px;
     border-top: 1px solid var(--border);
     display: flex;
     gap: 12px;
     background: white;
+    align-items: center;
   }
   .input-bar input {
     flex: 1;
-    padding: 12px 16px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
+    padding: 13px 18px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
     font-size: 14px;
     font-family: inherit;
     outline: none;
-    transition: border 0.2s;
+    transition: all 0.2s ease;
+    background: #f8fafc;
   }
-  .input-bar input:focus { border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(21,101,192,0.1); }
+  .input-bar input:focus {
+    border-color: var(--saffron);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 136, 0, 0.15);
+  }
   .send-btn {
-    background: var(--accent);
+    background: var(--saffron-gradient);
     color: white;
     border: none;
-    padding: 0 24px;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: 0 26px;
+    height: 46px;
+    border-radius: 10px;
+    font-weight: 700;
     font-size: 14px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(255, 136, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
-  .send-btn:hover { background: var(--accent-hover); }
+  .send-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(255, 136, 0, 0.45);
+  }
+  .send-btn:active {
+    transform: translateY(1px);
+  }
+  .status-footer-note {
+    text-align: center;
+    font-size: 11px;
+    color: #94a3b8;
+    padding: 6px 0;
+  }
 </style>
 </head>
 <body>
 
+<div class="tricolor-ribbon"></div>
+
 <header>
   <div class="brand">
-    <div class="brand-badge">SEWA SETU AI</div>
+    <div class="brand-logo-emblem">🇮🇳 SEWA SETU AI</div>
     <div class="brand-text">
       <h1>Department of Social Welfare</h1>
-      <p>Government of Purvanchal — Old Age Pension Assistant</p>
+      <p>Government of Purvanchal &bull; Old Age Pension AI Assistant</p>
     </div>
   </div>
   <div class="nav-links">
@@ -227,34 +325,37 @@
   </div>
 </header>
 
-<div class="chat-container">
-  <div class="mode-switch">
-    <span>Mode:</span>
-    <button class="mode-btn active" id="btn-citizen" onclick="setMode('citizen')">👵 Citizen Assistant (Port 8001)</button>
-    <button class="mode-btn" id="btn-officer" onclick="setMode('officer')">🏛️ Block Officer Assistant (Port 8002)</button>
-  </div>
+<div class="chat-wrapper">
+  <div class="chat-container">
+    <div class="mode-switch">
+      <span class="mode-label">Mode:</span>
+      <button class="mode-btn active" id="btn-citizen" onclick="setMode('citizen')">👵 Citizen Assistant (Port 8001)</button>
+      <button class="mode-btn" id="btn-officer" onclick="setMode('officer')">🏛️ Block Officer Assistant (Port 8002)</button>
+    </div>
 
-  <div class="quick-chips" id="quick-chips">
-    <div class="chip" onclick="sendPreset('Hello, I am Phuleswari Baruah, age 71 from Sonari. Can I apply for the pension?')">👵 Phuleswari (71, Sonari)</div>
-    <div class="chip" onclick="sendPreset('My name is Bhaben Gogoi from Borgaon, I am 58 years old.')">👴 Bhaben (58, Underage check)</div>
-    <div class="chip" onclick="sendPreset('What are the rules and benefits for Sewa Setu pension?')">❓ Scheme Info</div>
-    <div class="chip" onclick="sendPreset('Check application status for mobile 9876543201')">📋 Check Status</div>
-  </div>
+    <div class="quick-chips" id="quick-chips">
+      <div class="chip" onclick="sendPreset('Hello, I am Phuleswari Baruah, age 71 from Sonari. Can I apply for the pension?')">👵 Phuleswari (71, Sonari)</div>
+      <div class="chip" onclick="sendPreset('My name is Bhaben Gogoi from Borgaon, I am 58 years old.')">👴 Bhaben (58, Underage check)</div>
+      <div class="chip" onclick="sendPreset('What are the rules and benefits for Sewa Setu pension?')">❓ Scheme Info (₹250/mo)</div>
+      <div class="chip" onclick="sendPreset('Check application status for mobile 9876543201')">📋 Check Status</div>
+    </div>
 
-  <div class="messages-area" id="messages">
-    <div class="message assistant">
-      <div class="bubble">
-        <p><strong>Namaskar! I am your Sewa Setu Pension Assistant.</strong></p>
-        <p>I can help you apply for the Old Age Pension (₹250/month for residents aged 60+), verify your eligibility, or check application status.</p>
-        <p>Tell me your name, age, and village to begin, or click one of the quick options above!</p>
+    <div class="messages-area" id="messages">
+      <div class="message assistant">
+        <div class="bubble">
+          <p><strong>Namaskar! I am your Sewa Setu Old Age Pension Assistant.</strong></p>
+          <p>I can help you apply for the Old Age Pension (<strong>₹250 per month</strong> for residents aged 60+), verify your eligibility, or check your application status under the Right to Public Services Act.</p>
+          <p>Tell me your name, age, and village to begin, or click one of the quick options above!</p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <form class="input-bar" id="chat-form" onsubmit="handleSend(event)">
-    <input type="text" id="user-input" placeholder="Type your message in English or mixed Assamese..." autocomplete="off">
-    <button type="submit" class="send-btn">Send</button>
-  </form>
+    <form class="input-bar" id="chat-form" onsubmit="handleSend(event)">
+      <input type="text" id="user-input" placeholder="Type your message in English or mixed Assamese..." autocomplete="off">
+      <button type="submit" class="send-btn">Send ➔</button>
+    </form>
+  </div>
+  <div class="status-footer-note">Sewa Setu Portal is the single system of record &bull; Secured with OAuth 2.1 &bull; 15-Day Statutory SLA</div>
 </div>
 
 <script>
@@ -279,7 +380,7 @@ function setMode(mode) {
     chips.innerHTML = `
       <div class="chip" onclick="sendPreset('Hello, I am Phuleswari Baruah, age 71 from Sonari. Can I apply for the pension?')">👵 Phuleswari (71, Sonari)</div>
       <div class="chip" onclick="sendPreset('My name is Bhaben Gogoi from Borgaon, I am 58 years old.')">👴 Bhaben (58, Underage check)</div>
-      <div class="chip" onclick="sendPreset('What are the rules and benefits for Sewa Setu pension?')">❓ Scheme Info</div>
+      <div class="chip" onclick="sendPreset('What are the rules and benefits for Sewa Setu pension?')">❓ Scheme Info (₹250/mo)</div>
       <div class="chip" onclick="sendPreset('Check application status for mobile 9876543201')">📋 Check Status</div>
     `;
     addMessage("assistant", "👵 <strong>Citizen Assistant active.</strong><br>How can I help you with your pension application today?");
@@ -298,7 +399,7 @@ function addMessage(role, htmlContent, tools) {
   
   let toolHtml = "";
   if (tools && tools.length > 0) {
-    toolHtml = tools.map(t => `<div class="tool-badge">⚡ Tool: ${t.tool}</div>`).join("");
+    toolHtml = tools.map(t => `<div class="tool-badge">Tool: ${t.tool}</div>`).join("");
   }
   
   msgDiv.innerHTML = `<div class="bubble">${htmlContent}${toolHtml}</div>`;

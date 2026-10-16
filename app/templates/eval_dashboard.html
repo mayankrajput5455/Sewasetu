@@ -12,7 +12,11 @@
     --blue-dark: #0b3d6e;
     --blue: #1565c0;
     --blue-light: #e3f2fd;
-    --orange: #f7931e;
+    --saffron: #ff8800;
+    --saffron-dark: #e65100;
+    --saffron-light: #fff3e0;
+    --saffron-gradient: linear-gradient(135deg, #ff9933 0%, #ff6600 100%);
+    --orange: #ff8800;
     --orange-light: #fff3e0;
     --green: #1b7e3c;
     --green-light: #e8f5e9;
@@ -52,13 +56,14 @@
     gap: 16px;
   }
   .page-header .logo {
-    background: var(--orange);
+    background: var(--saffron-gradient);
     color: white;
-    font-weight: 700;
-    font-size: 18px;
-    padding: 8px 14px;
+    font-weight: 800;
+    font-size: 16px;
+    padding: 8px 16px;
     border-radius: var(--radius-sm);
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
+    box-shadow: 0 2px 10px rgba(255, 136, 0, 0.35);
   }
   .page-header .title-group h1 {
     color: white;
@@ -78,7 +83,7 @@
   }
   .page-header .run-btn {
     display: inline-block;
-    background: var(--orange);
+    background: var(--saffron-gradient);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -89,8 +94,12 @@
     cursor: pointer;
     margin-top: 6px;
     transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(255, 136, 0, 0.3);
   }
-  .page-header .run-btn:hover { background: #e68616; transform: translateY(-1px); }
+  .page-header .run-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(255, 136, 0, 0.45);
+  }
 
   /* Main layout */
   .main {
@@ -463,12 +472,13 @@
 </style>
 </head>
 <body>
+<div style="height: 4px; background: linear-gradient(90deg, #FF9933 0%, #FF9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%, #138808 100%);"></div>
 
 <header class="page-header">
-  <div class="logo">SS</div>
+  <div class="logo">🇮🇳 SEWA SETU</div>
   <div class="title-group">
     <h1>MCP Eval Dashboard</h1>
-    <p>Sewa Setu Old Age Pension — AI Assistant Test Suite</p>
+    <p>Department of Social Welfare, Government of Purvanchal &bull; AI Assistant Test Suite</p>
   </div>
   <div class="run-info">
     {% if run_at %}
