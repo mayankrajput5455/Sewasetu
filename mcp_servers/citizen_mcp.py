@@ -346,6 +346,6 @@ def withdraw_my_application(mobile: str, otp_code: str) -> str:
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    port = int(os.environ.get("CITIZEN_MCP_PORT", 8001))
+    port = int(os.environ.get("PORT") or os.environ.get("CITIZEN_MCP_PORT", 8001))
     logger.info(f"Starting Citizen MCP Server on port {port}")
     mcp.run(transport="streamable-http", port=port, host="0.0.0.0")

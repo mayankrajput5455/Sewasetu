@@ -1,0 +1,117 @@
+databases:
+  - name: sewasetu-db
+    databaseName: sewasetu
+    user: sewasetu
+    plan: free
+    region: oregon
+
+services:
+  # ---------------------------------------------------------------------------
+  # 1. Sewa Setu Portal & Eval Dashboard
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: sewasetu-portal
+    runtime: python
+    buildCommand: "pip install -r app/requirements.txt -r mcp_servers/requirements.txt"
+    startCommand: "gunicorn --chdir app app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 60"
+    plan: free
+    region: oregon
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        value: sewasetu123
+      - key: DB_HOST
+        fromDatabase:
+          name: sewasetu-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: sewasetu-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: sewasetu-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: sewasetu-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: sewasetu-db
+          property: password
+
+  # ---------------------------------------------------------------------------
+  # 2. Citizen MCP Server (Streamable HTTP)
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: sewasetu-citizen-mcp
+    runtime: python
+    buildCommand: "pip install -r mcp_servers/requirements.txt"
+    startCommand: "python mcp_servers/citizen_mcp.py"
+    plan: free
+    region: oregon
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: PORT
+        value: 8001
+      - key: DB_HOST
+        fromDatabase:
+          name: sewasetu-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: sewasetu-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: sewasetu-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: sewasetu-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: sewasetu-db
+          property: password
+
+  # ---------------------------------------------------------------------------
+  # 3. Block Officer MCP Server (Streamable HTTP)
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: sewasetu-officer-mcp
+    runtime: python
+    buildCommand: "pip install -r mcp_servers/requirements.txt"
+    startCommand: "python mcp_servers/officer_mcp.py"
+    plan: free
+    region: oregon
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: PORT
+        value: 8002
+      - key: DB_HOST
+        fromDatabase:
+          name: sewasetu-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: sewasetu-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: sewasetu-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: sewasetu-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: sewasetu-db
+          property: password

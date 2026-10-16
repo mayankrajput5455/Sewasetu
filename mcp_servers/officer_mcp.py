@@ -281,6 +281,6 @@ def get_dashboard_summary(block: Optional[str] = None) -> str:
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    port = int(os.environ.get("OFFICER_MCP_PORT", 8002))
+    port = int(os.environ.get("PORT") or os.environ.get("OFFICER_MCP_PORT", 8002))
     logger.info(f"Starting Officer MCP Server on port {port}")
     mcp.run(transport="streamable-http", port=port, host="0.0.0.0")
