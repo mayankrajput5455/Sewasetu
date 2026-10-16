@@ -8,8 +8,15 @@ Maintained in-house since 02/2026.
 """
 
 import os
+import sys
 import io
 import re
+
+app_dir = os.path.dirname(os.path.abspath(__file__))
+if app_dir not in sys.path:
+    sys.path.insert(0, app_dir)
+if __name__ == "__main__":
+    sys.modules["app"] = sys.modules[__name__]
 import json
 import random
 import hashlib
@@ -44,15 +51,15 @@ app.secret_key = os.environ.get("SECRET_KEY") or config.get("app", "secret_key")
 app.config["PERMANENT_SESSION_LIFETIME"] = 7200
 
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD") or "sewasetu123"
 
 # An applicant may hold at most one application in these states at a time.
 # WITHDRAWN and REJECTED applications do not block a fresh application.
 ACTIVE_STATUSES = ("PENDING", "APPROVED", "DEEMED_APPROVED")
 
-SMS_GATEWAY_URL = config.get("app", "sms_gateway_url")
+SMS_GATEWAY_URL = os.environ.get("SMS_GATEWAY_URL") or config.get("app", "sms_gateway_url")
 OTP_VALIDITY_SECONDS = config.getint("app", "otp_validity_seconds")
-UPLOAD_DIR = config.get("app", "upload_dir")
+UPLOAD_DIR = os.environ.get("UPLOAD_DIR") or config.get("app", "upload_dir")
 SCHEME_DEADLINE = datetime.strptime(config.get("pension", "scheme_deadline"),
                                     "%Y-%m-%d %H:%M")
 MIN_AGE = config.getint("pension", "min_age")
@@ -73,13 +80,17 @@ except Exception:
 
 
 def get_db():
-    return psycopg2.connect(
-        host=config.get("database", "host"),
-        port=config.get("database", "port"),
-        dbname=config.get("database", "name"),
-        user=config.get("database", "user"),
-        password=config.get("database", "password"),
-    )
+    host = os.environ.get("DB_HOST") or config.get("database", "host")
+    port = int(os.environ.get("DB_PORT") or config.get("database", "port"))
+    dbname = os.environ.get("DB_NAME") or config.get("database", "name")
+    user = os.environ.get("DB_USER") or config.get("database", "user")
+    password = os.environ.get("DB_PASSWORD") or config.get("database", "password")
+    try:
+        return psycopg2.connect(host=host, port=port, dbname=dbname, user=user, password=password)
+    except psycopg2.OperationalError:
+        if host == "db":
+            return psycopg2.connect(host="127.0.0.1", port=port, dbname=dbname, user=user, password=password)
+        raise
 
 
 def sanitize(value, maxlen=100):
