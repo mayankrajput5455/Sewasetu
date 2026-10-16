@@ -37,7 +37,7 @@ import werkzeug
 if not hasattr(werkzeug, "__version__"):
     werkzeug.__version__ = "3.0.0"
 from flask import (Flask, request, session, redirect, url_for, render_template,
-                   flash, send_file, abort)
+                   flash, send_file, abort, jsonify)
 from fpdf import FPDF
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -737,9 +737,29 @@ def eval_dashboard_run():
         )
     except Exception as e:
         flash("Eval run error: %s" % e)
-    return redirect(url_for("eval_dashboard"))
+# ---------------------------------------------------------------------------
+# Interactive AI Assistant Web UI — /assistant
+# ---------------------------------------------------------------------------
+
+import assistant as _assistant_engine
 
 
+@app.route("/assistant")
+def assistant_page():
+    return render_template("assistant.html")
+
+
+@app.route("/api/assistant/chat", methods=["POST"])
+def assistant_chat_api():
+    payload = request.get_json() or {}
+    message = payload.get("message", "")
+    mode = payload.get("mode", "citizen")
+    state = payload.get("state", {})
+    if mode == "officer":
+        res = _assistant_engine.handle_officer_message(message, username=session.get("admin_user", "officer"))
+    else:
+        res = _assistant_engine.handle_citizen_message(message, session_state=state)
+    return jsonify(res)
 
 
 if __name__ == "__main__":

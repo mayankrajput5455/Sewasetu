@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-10-16T08:41:50.004020",
+  "run_at": "2026-10-16T18:13:14.693817",
   "total": 8,
   "passed": 8,
   "failed": 0,
@@ -19,6 +19,52 @@
         "audit_log has SUBMIT action"
       ],
       "passed": true,
+      "transcript": [
+        {
+          "speaker": "Phuleswari Baruah",
+          "role": "citizen",
+          "text": "Namaskar ji. My name is Phuleswari Baruah, I am 71 years old from Sonari Gaon, Sonari. Can I apply for old age pension?"
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "check_eligibility",
+          "text": "Namaskar Phuleswari Baruah ji! Yes, you qualify for the Sewa Setu pension of \u20b9250/month (Age 71 \u2265 60, block Sonari is covered). Please provide your 10-digit mobile number so I can send an OTP."
+        },
+        {
+          "speaker": "Phuleswari Baruah",
+          "role": "citizen",
+          "text": "Haan ji, my mobile number is 9876543201."
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "request_otp",
+          "text": "I have sent a 6-digit OTP to 9876543201. Please enter the OTP code you received."
+        },
+        {
+          "speaker": "Phuleswari Baruah",
+          "role": "citizen",
+          "text": "The SMS says OTP is 625560."
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "verify_otp",
+          "text": "OTP verified successfully! Now please share your bank account number and 11-digit IFSC code from your passbook."
+        },
+        {
+          "speaker": "Phuleswari Baruah",
+          "role": "citizen",
+          "text": "My bank account number is 123456789012 and IFSC code is SBIN0003077."
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "submit_pension_application",
+          "text": "Congratulations Phuleswari Baruah ji! Your application has been submitted successfully to Sewa Setu. Your Application Number is SSP26523513. It is now in PENDING status under the 15-day statutory SLA review."
+        }
+      ],
       "steps": [
         {
           "tool": "check_eligibility",
@@ -42,14 +88,14 @@
           "input": {
             "mobile": "9876543201"
           },
-          "output": "OTP created: 532921",
+          "output": "OTP created: 625560",
           "passed": true
         },
         {
-          "tool": "verify_otp_internal",
+          "tool": "verify_otp",
           "input": {
             "mobile": "9876543201",
-            "code": "532921"
+            "code": "625560"
           },
           "output": {
             "ok": true,
@@ -71,8 +117,8 @@
             "ifsc": "SBIN0003077"
           },
           "output": {
-            "app_no": "SSP26562331",
-            "id": 100019
+            "app_no": "SSP26523513",
+            "id": 100027
           },
           "passed": true
         },
@@ -82,13 +128,13 @@
             "mobile": "9876543201"
           },
           "output": {
-            "id": 100019,
-            "application_no": "SSP26562331",
+            "id": 100027,
+            "application_no": "SSP26523513",
             "applicant_name": "Phuleswari Baruah",
             "mobile": "9876543201",
             "block": "Sonari",
             "status": "PENDING",
-            "submitted_at": "2026-10-16 08:42:12.903440",
+            "submitted_at": "2026-10-16 18:13:44.404189",
             "decided_at": null,
             "decided_by": null
           },
@@ -96,8 +142,8 @@
         }
       ],
       "reason": "",
-      "elapsed_seconds": 12.91,
-      "run_at": "2026-10-16T08:41:50.004020"
+      "elapsed_seconds": 13.12,
+      "run_at": "2026-10-16T18:13:14.693817"
     },
     {
       "persona_id": "P2",
@@ -112,6 +158,19 @@
         "reason mentions age requirement"
       ],
       "passed": true,
+      "transcript": [
+        {
+          "speaker": "Bhaben Gogoi",
+          "role": "citizen",
+          "text": "Namaskar, my name is Bhaben Gogoi. I am 58 years old from Namti Bazar, Namti. I want to apply for the pension scheme."
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "check_eligibility",
+          "text": "Namaskar Bhaben Gogoi ji. Under the Sewa Setu rules: Applicant is 58 years old. Minimum age is 60.. Therefore, we cannot proceed with the application at this time."
+        }
+      ],
       "steps": [
         {
           "tool": "check_eligibility",
@@ -143,8 +202,8 @@
         }
       ],
       "reason": "",
-      "elapsed_seconds": 4.73,
-      "run_at": "2026-10-16T08:41:50.004020"
+      "elapsed_seconds": 5.37,
+      "run_at": "2026-10-16T18:13:14.693817"
     },
     {
       "persona_id": "P3",
@@ -160,6 +219,19 @@
         "response lists eligible blocks"
       ],
       "passed": true,
+      "transcript": [
+        {
+          "speaker": "Dipali Das",
+          "role": "citizen",
+          "text": "Namaskar, my name is Dipali Das. I am 65 years old from Guwahati Nagar, Guwahati. I want to apply for the pension scheme."
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "check_eligibility",
+          "text": "Namaskar Dipali Das ji. Under the Sewa Setu rules: Block 'Guwahati' is not covered. Eligible blocks: Sonari, Rajapara, Dhemaji Pathar, Borgaon, Namti, Khelua.. Therefore, we cannot proceed with the application at this time."
+        }
+      ],
       "steps": [
         {
           "tool": "check_eligibility",
@@ -191,8 +263,8 @@
         }
       ],
       "reason": "",
-      "elapsed_seconds": 4.7,
-      "run_at": "2026-10-16T08:41:50.004020"
+      "elapsed_seconds": 4.77,
+      "run_at": "2026-10-16T18:13:14.693817"
     },
     {
       "persona_id": "P4",
@@ -207,13 +279,26 @@
         "response mentions existing application number"
       ],
       "passed": true,
+      "transcript": [
+        {
+          "speaker": "Hemanta Saikia",
+          "role": "citizen",
+          "text": "Namaskar, I am Hemanta Saikia from Namti, mobile 9876543201. I want to submit another application for the pension."
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "active_application_check",
+          "text": "Namaskar Hemanta Saikia ji. Our portal records show that mobile number 9876543201 already holds an active application (SSP26523513) with status PENDING. Under scheme rules, each citizen can only have one active application. Would you like me to check its status or help you withdraw it?"
+        }
+      ],
       "steps": [
         {
           "tool": "active_application_check",
           "input": {
             "mobile": "9876543201"
           },
-          "output": "(100019, 'SSP26562331', 'PENDING')",
+          "output": "(100027, 'SSP26523513', 'PENDING')",
           "passed": true
         },
         {
@@ -229,8 +314,8 @@
         }
       ],
       "reason": "",
-      "elapsed_seconds": 4.66,
-      "run_at": "2026-10-16T08:41:50.004020"
+      "elapsed_seconds": 4.73,
+      "run_at": "2026-10-16T18:13:14.693817"
     },
     {
       "persona_id": "P5",
@@ -246,6 +331,19 @@
         "no application created with invalid data"
       ],
       "passed": true,
+      "transcript": [
+        {
+          "speaker": "Tara Begum",
+          "role": "citizen",
+          "text": "Namaskar, I am Tara Begum, 63 years old from Borgaon. My bank account is 'not-a-number' and IFSC is 'INVALID'."
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "validate_application",
+          "text": "Namaskar Tara Begum ji. There are formatting errors with the details provided: Bank account must be 9\u201318 digits, and IFSC must be an 11-character code. Please check your bank passbook and give the corrected numbers."
+        }
+      ],
       "steps": [
         {
           "tool": "validate_application",
@@ -279,8 +377,8 @@
         }
       ],
       "reason": "",
-      "elapsed_seconds": 2.32,
-      "run_at": "2026-10-16T08:41:50.004020"
+      "elapsed_seconds": 2.39,
+      "run_at": "2026-10-16T18:13:14.693817"
     },
     {
       "persona_id": "P5B",
@@ -295,6 +393,52 @@
         "block is Borgaon"
       ],
       "passed": true,
+      "transcript": [
+        {
+          "speaker": "Tara Begum (corrected)",
+          "role": "citizen",
+          "text": "Namaskar ji. My name is Tara Begum (corrected), I am 63 years old from Borgaon Char, Borgaon. Can I apply for old age pension?"
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "check_eligibility",
+          "text": "Namaskar Tara Begum (corrected) ji! Yes, you qualify for the Sewa Setu pension of \u20b9250/month (Age 63 \u2265 60, block Borgaon is covered). Please provide your 10-digit mobile number so I can send an OTP."
+        },
+        {
+          "speaker": "Tara Begum (corrected)",
+          "role": "citizen",
+          "text": "Haan ji, my mobile number is 9876543204."
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "request_otp",
+          "text": "I have sent a 6-digit OTP to 9876543204. Please enter the OTP code you received."
+        },
+        {
+          "speaker": "Tara Begum (corrected)",
+          "role": "citizen",
+          "text": "The SMS says OTP is 552036."
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "verify_otp",
+          "text": "OTP verified successfully! Now please share your bank account number and 11-digit IFSC code from your passbook."
+        },
+        {
+          "speaker": "Tara Begum (corrected)",
+          "role": "citizen",
+          "text": "My bank account number is 543210987654 and IFSC code is SBIN0005678."
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "submit_pension_application",
+          "text": "Congratulations Tara Begum (corrected) ji! Your application has been submitted successfully to Sewa Setu. Your Application Number is SSP26724476. It is now in PENDING status under the 15-day statutory SLA review."
+        }
+      ],
       "steps": [
         {
           "tool": "check_eligibility",
@@ -318,14 +462,14 @@
           "input": {
             "mobile": "9876543204"
           },
-          "output": "OTP created: 734794",
+          "output": "OTP created: 552036",
           "passed": true
         },
         {
-          "tool": "verify_otp_internal",
+          "tool": "verify_otp",
           "input": {
             "mobile": "9876543204",
-            "code": "734794"
+            "code": "552036"
           },
           "output": {
             "ok": true,
@@ -347,8 +491,8 @@
             "ifsc": "SBIN0005678"
           },
           "output": {
-            "app_no": "SSP26552790",
-            "id": 100020
+            "app_no": "SSP26724476",
+            "id": 100028
           },
           "passed": true
         },
@@ -358,13 +502,13 @@
             "mobile": "9876543204"
           },
           "output": {
-            "id": 100020,
-            "application_no": "SSP26552790",
+            "id": 100028,
+            "application_no": "SSP26724476",
             "applicant_name": "Tara Begum (corrected)",
             "mobile": "9876543204",
             "block": "Borgaon",
             "status": "PENDING",
-            "submitted_at": "2026-10-16 08:42:42.108731",
+            "submitted_at": "2026-10-16 18:14:14.756492",
             "decided_at": null,
             "decided_by": null
           },
@@ -372,8 +516,8 @@
         }
       ],
       "reason": "",
-      "elapsed_seconds": 12.72,
-      "run_at": "2026-10-16T08:41:50.004020"
+      "elapsed_seconds": 13.04,
+      "run_at": "2026-10-16T18:13:14.693817"
     },
     {
       "persona_id": "P6",
@@ -388,11 +532,35 @@
         "decided_by contains 'officer'"
       ],
       "passed": true,
+      "transcript": [
+        {
+          "speaker": "Block Officer",
+          "role": "officer",
+          "text": "Assistant, inspect the pending queue for Sonari block and fetch the dossier for applicant mobile 9876543201."
+        },
+        {
+          "speaker": "Officer Assistant",
+          "role": "assistant",
+          "tool": "view_application",
+          "text": "Retrieved application SSP26523513 (ID: 100027) for Phuleswari Baruah. Status: PENDING. Age verified via verbal declaration. Audit trail clean."
+        },
+        {
+          "speaker": "Block Officer",
+          "role": "officer",
+          "text": "Approve application SSP26523513 with note: 'Documents verified via AI-assisted review. Age confirmed from verbal declaration.'."
+        },
+        {
+          "speaker": "Officer Assistant",
+          "role": "assistant",
+          "tool": "approve_application",
+          "text": "Application SSP26523513 has been successfully APPROVED. Recorded permanently in audit_log with officer identity."
+        }
+      ],
       "steps": [
         {
           "tool": "view_application",
           "input": {
-            "id": 100019
+            "id": 100027
           },
           "output": {
             "found": true,
@@ -403,30 +571,37 @@
         {
           "tool": "approve_application",
           "input": {
-            "id": 100019,
-            "note": "Documents verified via AI-assisted review. Age confirmed from Aadhaar verbal declaration."
+            "id": 100027,
+            "note": "Documents verified via AI-assisted review. Age confirmed from verbal declaration."
           },
           "output": {
             "success": true,
-            "msg": "Application SSP26562331 has been APPROVED."
+            "msg": "Application SSP26523513 has been APPROVED."
           },
           "passed": true
         },
         {
-          "tool": "db_assertion_approved",
+          "tool": "db_assertion",
           "input": {
-            "mobile": "9876543201"
+            "id": 100027
           },
           "output": {
+            "id": 100027,
+            "application_no": "SSP26523513",
+            "applicant_name": "Phuleswari Baruah",
+            "mobile": "9876543201",
+            "block": "Sonari",
             "status": "APPROVED",
-            "audit_ok": true
+            "submitted_at": "2026-10-16 18:13:44.404189",
+            "decided_at": "2026-10-16 18:14:22.047596",
+            "decided_by": "officer"
           },
           "passed": true
         }
       ],
       "reason": "",
-      "elapsed_seconds": 10.53,
-      "run_at": "2026-10-16T08:41:50.004020"
+      "elapsed_seconds": 8.38,
+      "run_at": "2026-10-16T18:13:14.693817"
     },
     {
       "persona_id": "P7",
@@ -441,19 +616,54 @@
         "audit_log has WITHDRAW then SUBMIT actions"
       ],
       "passed": true,
+      "transcript": [
+        {
+          "speaker": "Kalidas Bora",
+          "role": "citizen",
+          "text": "Namaskar, I am Kalidas Bora from Rajapara Bazar, Rajapara. I want to submit an application."
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "submit_pension_application",
+          "text": "Application SSP26358264 submitted. Status: PENDING."
+        },
+        {
+          "speaker": "Kalidas Bora",
+          "role": "citizen",
+          "text": "I made a mistake in my bank details! Please help me withdraw this application so I can reapply."
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "withdraw_application",
+          "text": "Application SSP26358264 is now WITHDRAWN. You are cleared to submit a fresh application."
+        },
+        {
+          "speaker": "Kalidas Bora",
+          "role": "citizen",
+          "text": "Here are my corrected bank details: Account 321654987321, IFSC UTBI0001234. Please re-submit."
+        },
+        {
+          "speaker": "Sewa Setu Assistant",
+          "role": "assistant",
+          "tool": "submit_pension_application",
+          "text": "Corrected application submitted successfully! New Application Number: SSP26310891."
+        }
+      ],
       "steps": [
         {
           "tool": "submit_application_1",
           "input": {},
           "output": {
-            "app_no": "SSP26499018"
+            "app_no": "SSP26358264"
           },
           "passed": true
         },
         {
           "tool": "withdraw_application",
           "input": {
-            "id": 100021
+            "id": 100029
           },
           "output": {
             "withdrawn": true
@@ -464,7 +674,7 @@
           "tool": "submit_application_2",
           "input": {},
           "output": {
-            "app_no": "SSP26321439"
+            "app_no": "SSP26310891"
           },
           "passed": true
         },
@@ -483,8 +693,8 @@
         }
       ],
       "reason": "",
-      "elapsed_seconds": 26.72,
-      "run_at": "2026-10-16T08:41:50.004020"
+      "elapsed_seconds": 26.95,
+      "run_at": "2026-10-16T18:13:14.693817"
     }
   ]
 }
