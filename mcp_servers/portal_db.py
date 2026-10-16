@@ -64,6 +64,9 @@ def now_ist():
 
 
 def get_db():
+    db_url = os.environ.get("DATABASE_URL")
+    if db_url:
+        return psycopg2.connect(db_url)
     try:
         return psycopg2.connect(**_DB)
     except psycopg2.OperationalError:

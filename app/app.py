@@ -80,6 +80,9 @@ except Exception:
 
 
 def get_db():
+    db_url = os.environ.get("DATABASE_URL")
+    if db_url:
+        return psycopg2.connect(db_url)
     host = os.environ.get("DB_HOST") or config.get("database", "host")
     port = int(os.environ.get("DB_PORT") or config.get("database", "port"))
     dbname = os.environ.get("DB_NAME") or config.get("database", "name")
