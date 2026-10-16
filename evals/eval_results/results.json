@@ -1,0 +1,490 @@
+{
+  "run_at": "2026-10-16T08:41:50.004020",
+  "total": 8,
+  "passed": 8,
+  "failed": 0,
+  "results": [
+    {
+      "persona_id": "P1",
+      "persona_name": "Phuleswari Baruah",
+      "scenario_type": "happy_path",
+      "backstory": "Phuleswari is a 71-year-old widow from Sonari village. Her grandson helped her come to the CSC kiosk. She speaks broken Assamese-Hindi mix, is patient, gives all details slowly, and has a photo ID for age proof. This is a straightforward first-time application.",
+      "intent": "Apply for the pension for the first time",
+      "expected_outcome": "Application created with PENDING status",
+      "eval_checks": [
+        "application exists in DB with mobile=9876543201",
+        "status is PENDING",
+        "block is Sonari",
+        "applicant_name contains Baruah",
+        "audit_log has SUBMIT action"
+      ],
+      "passed": true,
+      "steps": [
+        {
+          "tool": "check_eligibility",
+          "input": {
+            "dob": "12/05/1955",
+            "block": "Sonari",
+            "mobile": "9876543201"
+          },
+          "output": {
+            "eligible": true,
+            "issues": [],
+            "notes": [
+              "Age 71 \u2014 eligible.",
+              "Block Sonari is covered."
+            ]
+          },
+          "passed": true
+        },
+        {
+          "tool": "request_otp",
+          "input": {
+            "mobile": "9876543201"
+          },
+          "output": "OTP created: 532921",
+          "passed": true
+        },
+        {
+          "tool": "verify_otp_internal",
+          "input": {
+            "mobile": "9876543201",
+            "code": "532921"
+          },
+          "output": {
+            "ok": true,
+            "reason": ""
+          },
+          "passed": true
+        },
+        {
+          "tool": "submit_application",
+          "input": {
+            "applicant_name": "Phuleswari Baruah",
+            "dob": "12/05/1955",
+            "gender": "Female",
+            "marital_status": "Widowed",
+            "husband_name": "Hemanta Baruah",
+            "village": "Sonari Gaon",
+            "block": "Sonari",
+            "bank_account": "123456789012",
+            "ifsc": "SBIN0003077"
+          },
+          "output": {
+            "app_no": "SSP26562331",
+            "id": 100019
+          },
+          "passed": true
+        },
+        {
+          "tool": "db_assertion",
+          "input": {
+            "mobile": "9876543201"
+          },
+          "output": {
+            "id": 100019,
+            "application_no": "SSP26562331",
+            "applicant_name": "Phuleswari Baruah",
+            "mobile": "9876543201",
+            "block": "Sonari",
+            "status": "PENDING",
+            "submitted_at": "2026-10-16 08:42:12.903440",
+            "decided_at": null,
+            "decided_by": null
+          },
+          "passed": true
+        }
+      ],
+      "reason": "",
+      "elapsed_seconds": 12.91,
+      "run_at": "2026-10-16T08:41:50.004020"
+    },
+    {
+      "persona_id": "P2",
+      "persona_name": "Bhaben Gogoi",
+      "scenario_type": "eligibility_failure_age",
+      "backstory": "Bhaben is 58, not yet 60. His daughter thinks he might be eligible. He is assertive and wants to apply right now even after being told he's ineligible.",
+      "intent": "Apply for pension despite being underage",
+      "expected_outcome": "Application rejected at eligibility check \u2014 age too low",
+      "eval_checks": [
+        "no application in DB with mobile=9876543202",
+        "check_eligibility returns eligible=false",
+        "reason mentions age requirement"
+      ],
+      "passed": true,
+      "steps": [
+        {
+          "tool": "check_eligibility",
+          "input": {
+            "dob": "03/11/1967",
+            "block": "Namti",
+            "mobile": "9876543202"
+          },
+          "output": {
+            "eligible": false,
+            "issues": [
+              "Applicant is 58 years old. Minimum age is 60."
+            ],
+            "notes": [
+              "Block Namti is covered."
+            ]
+          },
+          "passed": true
+        },
+        {
+          "tool": "db_assertion_no_app",
+          "input": {
+            "mobile": "9876543202"
+          },
+          "output": {
+            "count": 0
+          },
+          "passed": true
+        }
+      ],
+      "reason": "",
+      "elapsed_seconds": 4.73,
+      "run_at": "2026-10-16T08:41:50.004020"
+    },
+    {
+      "persona_id": "P3",
+      "persona_name": "Dipali Das",
+      "scenario_type": "eligibility_failure_block",
+      "backstory": "Dipali lives in Guwahati which is not covered by the scheme. Her nephew called an AI assistant to help her. She doesn't understand why her block isn't covered.",
+      "intent": "Apply for pension from ineligible block",
+      "expected_outcome": "Eligibility check fails \u2014 block not covered",
+      "eval_checks": [
+        "no application in DB with mobile=9876543203",
+        "check_eligibility returns eligible=false",
+        "reason mentions block eligibility",
+        "response lists eligible blocks"
+      ],
+      "passed": true,
+      "steps": [
+        {
+          "tool": "check_eligibility",
+          "input": {
+            "dob": "22/08/1961",
+            "block": "Guwahati",
+            "mobile": "9876543203"
+          },
+          "output": {
+            "eligible": false,
+            "issues": [
+              "Block 'Guwahati' is not covered. Eligible blocks: Sonari, Rajapara, Dhemaji Pathar, Borgaon, Namti, Khelua."
+            ],
+            "notes": [
+              "Age 65 \u2014 eligible."
+            ]
+          },
+          "passed": true
+        },
+        {
+          "tool": "db_assertion_no_app",
+          "input": {
+            "mobile": "9876543203"
+          },
+          "output": {
+            "count": 0
+          },
+          "passed": true
+        }
+      ],
+      "reason": "",
+      "elapsed_seconds": 4.7,
+      "run_at": "2026-10-16T08:41:50.004020"
+    },
+    {
+      "persona_id": "P4",
+      "persona_name": "Hemanta Saikia",
+      "scenario_type": "duplicate_application",
+      "backstory": "Hemanta's grandson tries to apply for him, but the mobile number 9876543201 already has an active application (Phuleswari's from P1). This tests the duplicate detection logic.",
+      "intent": "Apply for pension, but mobile number already has active application",
+      "expected_outcome": "Blocked \u2014 existing active application on this mobile",
+      "eval_checks": [
+        "only one application exists for mobile=9876543201",
+        "second submission attempt is blocked",
+        "response mentions existing application number"
+      ],
+      "passed": true,
+      "steps": [
+        {
+          "tool": "active_application_check",
+          "input": {
+            "mobile": "9876543201"
+          },
+          "output": "(100019, 'SSP26562331', 'PENDING')",
+          "passed": true
+        },
+        {
+          "tool": "db_assertion_blocked",
+          "input": {
+            "mobile": "9876543201"
+          },
+          "output": {
+            "count_before": 1,
+            "blocked": true
+          },
+          "passed": true
+        }
+      ],
+      "reason": "",
+      "elapsed_seconds": 4.66,
+      "run_at": "2026-10-16T08:41:50.004020"
+    },
+    {
+      "persona_id": "P5",
+      "persona_name": "Tara Begum",
+      "scenario_type": "validation_error",
+      "backstory": "Tara typed her bank account and IFSC incorrectly. She has the passbook but her grandson misread it. The assistant should catch both errors and prompt correction before allowing submission.",
+      "intent": "Apply for pension with initially incorrect bank details",
+      "expected_outcome": "Validation fails \u2014 bank account and IFSC format errors caught",
+      "eval_checks": [
+        "initial submission attempt returns validation errors",
+        "errors mention bank account format",
+        "errors mention IFSC format",
+        "no application created with invalid data"
+      ],
+      "passed": true,
+      "steps": [
+        {
+          "tool": "validate_application",
+          "input": {
+            "applicant_name": "Tara Begum",
+            "dob": "07/09/1963",
+            "gender": "Female",
+            "marital_status": "Widowed",
+            "village": "Borgaon Char",
+            "block": "Borgaon",
+            "bank_account": "not-a-number",
+            "ifsc": "INVALID"
+          },
+          "output": {
+            "errors": [
+              "bank account number must be 9 to 18 digits",
+              "IFSC must be 11 characters, e.g. SBIN0003077"
+            ]
+          },
+          "passed": true
+        },
+        {
+          "tool": "db_assertion_no_app",
+          "input": {
+            "mobile": "9876543204"
+          },
+          "output": {
+            "count": 0
+          },
+          "passed": true
+        }
+      ],
+      "reason": "",
+      "elapsed_seconds": 2.32,
+      "run_at": "2026-10-16T08:41:50.004020"
+    },
+    {
+      "persona_id": "P5B",
+      "persona_name": "Tara Begum (corrected)",
+      "scenario_type": "validation_error_then_success",
+      "backstory": "After correcting bank details, Tara's application should succeed.",
+      "intent": "Apply for pension after correcting bank details",
+      "expected_outcome": "Application created after validation error correction",
+      "eval_checks": [
+        "application exists in DB with mobile=9876543204",
+        "status is PENDING",
+        "block is Borgaon"
+      ],
+      "passed": true,
+      "steps": [
+        {
+          "tool": "check_eligibility",
+          "input": {
+            "dob": "07/09/1963",
+            "block": "Borgaon",
+            "mobile": "9876543204"
+          },
+          "output": {
+            "eligible": true,
+            "issues": [],
+            "notes": [
+              "Age 63 \u2014 eligible.",
+              "Block Borgaon is covered."
+            ]
+          },
+          "passed": true
+        },
+        {
+          "tool": "request_otp",
+          "input": {
+            "mobile": "9876543204"
+          },
+          "output": "OTP created: 734794",
+          "passed": true
+        },
+        {
+          "tool": "verify_otp_internal",
+          "input": {
+            "mobile": "9876543204",
+            "code": "734794"
+          },
+          "output": {
+            "ok": true,
+            "reason": ""
+          },
+          "passed": true
+        },
+        {
+          "tool": "submit_application",
+          "input": {
+            "applicant_name": "Tara Begum (corrected)",
+            "dob": "07/09/1963",
+            "gender": "Female",
+            "marital_status": "Widowed",
+            "husband_name": "Abdul Karim",
+            "village": "Borgaon Char",
+            "block": "Borgaon",
+            "bank_account": "543210987654",
+            "ifsc": "SBIN0005678"
+          },
+          "output": {
+            "app_no": "SSP26552790",
+            "id": 100020
+          },
+          "passed": true
+        },
+        {
+          "tool": "db_assertion",
+          "input": {
+            "mobile": "9876543204"
+          },
+          "output": {
+            "id": 100020,
+            "application_no": "SSP26552790",
+            "applicant_name": "Tara Begum (corrected)",
+            "mobile": "9876543204",
+            "block": "Borgaon",
+            "status": "PENDING",
+            "submitted_at": "2026-10-16 08:42:42.108731",
+            "decided_at": null,
+            "decided_by": null
+          },
+          "passed": true
+        }
+      ],
+      "reason": "",
+      "elapsed_seconds": 12.72,
+      "run_at": "2026-10-16T08:41:50.004020"
+    },
+    {
+      "persona_id": "P6",
+      "persona_name": "Officer Verification \u2014 Phuleswari",
+      "scenario_type": "officer_approval",
+      "backstory": "Block officer Priya Sharma logs into the officer assistant and reviews Phuleswari Baruah's application, then approves it with a verification note.",
+      "intent": "Officer reviews and approves Phuleswari's pending application",
+      "expected_outcome": "Application approved by officer; audit trail updated",
+      "eval_checks": [
+        "application for mobile=9876543201 has status=APPROVED",
+        "audit_log has APPROVED action",
+        "decided_by contains 'officer'"
+      ],
+      "passed": true,
+      "steps": [
+        {
+          "tool": "view_application",
+          "input": {
+            "id": 100019
+          },
+          "output": {
+            "found": true,
+            "status": "PENDING"
+          },
+          "passed": true
+        },
+        {
+          "tool": "approve_application",
+          "input": {
+            "id": 100019,
+            "note": "Documents verified via AI-assisted review. Age confirmed from Aadhaar verbal declaration."
+          },
+          "output": {
+            "success": true,
+            "msg": "Application SSP26562331 has been APPROVED."
+          },
+          "passed": true
+        },
+        {
+          "tool": "db_assertion_approved",
+          "input": {
+            "mobile": "9876543201"
+          },
+          "output": {
+            "status": "APPROVED",
+            "audit_ok": true
+          },
+          "passed": true
+        }
+      ],
+      "reason": "",
+      "elapsed_seconds": 10.53,
+      "run_at": "2026-10-16T08:41:50.004020"
+    },
+    {
+      "persona_id": "P7",
+      "persona_name": "Kalidas Bora",
+      "scenario_type": "withdraw_and_reapply",
+      "backstory": "Kalidas first applied and then realized his bank details are wrong. He wants to withdraw and reapply with the correct account.",
+      "intent": "Withdraw pending application and reapply",
+      "expected_outcome": "First application withdrawn, second application created",
+      "eval_checks": [
+        "withdrawn application exists with status=WITHDRAWN for mobile=9876543205",
+        "new application exists with status=PENDING for mobile=9876543205",
+        "audit_log has WITHDRAW then SUBMIT actions"
+      ],
+      "passed": true,
+      "steps": [
+        {
+          "tool": "submit_application_1",
+          "input": {},
+          "output": {
+            "app_no": "SSP26499018"
+          },
+          "passed": true
+        },
+        {
+          "tool": "withdraw_application",
+          "input": {
+            "id": 100021
+          },
+          "output": {
+            "withdrawn": true
+          },
+          "passed": true
+        },
+        {
+          "tool": "submit_application_2",
+          "input": {},
+          "output": {
+            "app_no": "SSP26321439"
+          },
+          "passed": true
+        },
+        {
+          "tool": "db_assertion_two_apps",
+          "input": {
+            "mobile": "9876543205"
+          },
+          "output": {
+            "statuses": [
+              "WITHDRAWN",
+              "PENDING"
+            ]
+          },
+          "passed": true
+        }
+      ],
+      "reason": "",
+      "elapsed_seconds": 26.72,
+      "run_at": "2026-10-16T08:41:50.004020"
+    }
+  ]
+}

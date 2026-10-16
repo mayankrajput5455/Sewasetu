@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCP Eval Dashboard — Sewa Setu</title>
+<meta name="description" content="AI Assistant Evaluation Dashboard for the Sewa Setu Old Age Pension Portal MCP servers">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-dark: #0b3d6e;
+    --blue: #1565c0;
+    --blue-light: #e3f2fd;
+    --orange: #f7931e;
+    --orange-light: #fff3e0;
+    --green: #1b7e3c;
+    --green-light: #e8f5e9;
+    --red: #c62828;
+    --red-light: #ffebee;
+    --yellow: #f57f17;
+    --yellow-light: #fffde7;
+    --gray-50: #fafafa;
+    --gray-100: #f5f5f5;
+    --gray-200: #eeeeee;
+    --gray-300: #e0e0e0;
+    --gray-500: #9e9e9e;
+    --gray-700: #616161;
+    --gray-900: #212121;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+    --shadow: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,.1);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: linear-gradient(135deg, #0b3d6e 0%, #1565c0 50%, #1976d2 100%);
+    min-height: 100vh;
+    color: var(--gray-900);
+  }
+
+  /* Header */
+  .page-header {
+    background: rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .page-header .logo {
+    background: var(--orange);
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    letter-spacing: 1px;
+  }
+  .page-header .title-group h1 {
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .page-header .title-group p {
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    margin-top: 2px;
+  }
+  .page-header .run-info {
+    margin-left: auto;
+    text-align: right;
+    color: rgba(255,255,255,0.8);
+    font-size: 13px;
+  }
+  .page-header .run-btn {
+    display: inline-block;
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: all 0.2s;
+  }
+  .page-header .run-btn:hover { background: #e68616; transform: translateY(-1px); }
+
+  /* Main layout */
+  .main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 40px;
+  }
+
+  /* Score card */
+  .score-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .score-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .score-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .score-card.total::before { background: var(--blue); }
+  .score-card.passed::before { background: var(--green); }
+  .score-card.failed::before { background: var(--red); }
+  .score-card.rate::before { background: var(--orange); }
+  .score-card .metric {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .score-card.passed .metric { color: var(--green); }
+  .score-card.failed .metric { color: var(--red); }
+  .score-card.rate .metric { color: var(--orange); }
+  .score-card.total .metric { color: var(--blue); }
+  .score-card .label {
+    font-size: 13px;
+    color: var(--gray-700);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .score-card .sub {
+    font-size: 11px;
+    color: var(--gray-500);
+    margin-top: 4px;
+  }
+
+  /* Persona cards */
+  .section-title {
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .badge {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  .persona-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .persona-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .persona-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .persona-header {
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .persona-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    font-weight: bold;
+  }
+  .persona-header .info h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+  }
+  .persona-header .info .meta {
+    font-size: 12px;
+    color: var(--gray-500);
+  }
+  .persona-header .info .meta span { margin-right: 12px; }
+  .persona-status {
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .badge-pass, .badge-fail, .badge-warn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge-pass { background: var(--green-light); color: var(--green); }
+  .badge-fail { background: var(--red-light); color: var(--red); }
+  .badge-warn { background: var(--yellow-light); color: var(--yellow); }
+
+  .scenario-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+  }
+  .sc-happy { background: #e8f5e9; color: #2e7d32; }
+  .sc-failure { background: #ffebee; color: #c62828; }
+  .sc-validation { background: #fff3e0; color: #e65100; }
+  .sc-duplicate { background: #e3f2fd; color: #1565c0; }
+  .sc-officer { background: #f3e5f5; color: #6a1b9a; }
+  .sc-withdraw { background: #e0f2f1; color: #004d40; }
+
+  .persona-body {
+    padding: 18px 20px;
+  }
+  .persona-body .backstory {
+    font-size: 13px;
+    color: var(--gray-700);
+    line-height: 1.6;
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+  .persona-body .intent-box {
+    background: var(--blue-light);
+    border-left: 3px solid var(--blue);
+    padding: 10px 14px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 13px;
+    color: var(--blue-dark);
+    margin-bottom: 14px;
+  }
+  .persona-body .intent-box strong { display: block; margin-bottom: 4px; }
+
+  /* Steps */
+  .steps-list {
+    margin-top: 4px;
+  }
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 12px;
+  }
+  .step-item:last-child { border-bottom: none; }
+  .step-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-dot.ok { background: var(--green-light); color: var(--green); }
+  .step-dot.fail { background: var(--red-light); color: var(--red); }
+  .step-tool {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--blue);
+    font-weight: 500;
+  }
+  .step-detail { color: var(--gray-700); flex: 1; }
+
+  /* Checks */
+  .checks-section {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--gray-200);
+  }
+  .checks-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gray-500);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--gray-700);
+    padding: 3px 0;
+  }
+  .check-ok { color: var(--green); }
+  .check-fail { color: var(--red); }
+
+  /* Elapsed time */
+  .elapsed {
+    font-size: 11px;
+    color: var(--gray-500);
+    text-align: right;
+    padding-top: 10px;
+    border-top: 1px solid var(--gray-100);
+    margin-top: 10px;
+  }
+
+  /* Insights section */
+  .insights-section {
+    background: white;
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: var(--shadow);
+    margin-bottom: 40px;
+  }
+  .insights-section h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 6px;
+  }
+  .insights-section .subtitle {
+    font-size: 14px;
+    color: var(--gray-500);
+    margin-bottom: 24px;
+  }
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .insight-card {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: 18px;
+  }
+  .insight-card .ic-icon { font-size: 24px; margin-bottom: 10px; }
+  .insight-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--gray-900); }
+  .insight-card p { font-size: 13px; color: var(--gray-700); line-height: 1.6; }
+
+  /* MCP endpoints section */
+  .endpoints-section {
+    background: white;
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: var(--shadow);
+    margin-bottom: 40px;
+  }
+  .endpoints-section h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 20px;
+  }
+  .endpoint-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+  }
+  .endpoint-icon {
+    background: var(--blue-light);
+    color: var(--blue);
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .endpoint-card .ep-name { font-size: 15px; font-weight: 600; color: var(--gray-900); }
+  .endpoint-card .ep-url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--blue);
+    background: var(--blue-light);
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin: 4px 0;
+  }
+  .endpoint-card .ep-desc { font-size: 13px; color: var(--gray-700); margin-top: 4px; }
+  .tool-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .tool-chip {
+    background: var(--gray-100);
+    color: var(--gray-700);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  /* No data state */
+  .no-data {
+    text-align: center;
+    padding: 60px 40px;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .no-data .icon { font-size: 48px; margin-bottom: 16px; }
+  .no-data h3 { font-size: 20px; font-weight: 600; color: var(--gray-900); margin-bottom: 8px; }
+  .no-data p { font-size: 14px; color: var(--gray-500); }
+
+  .progress-bar {
+    height: 6px;
+    background: var(--gray-200);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--green) 0%, #4caf50 100%);
+    transition: width 1s ease;
+  }
+
+  footer {
+    text-align: center;
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    padding: 20px 40px 40px;
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="logo">SS</div>
+  <div class="title-group">
+    <h1>MCP Eval Dashboard</h1>
+    <p>Sewa Setu Old Age Pension — AI Assistant Test Suite</p>
+  </div>
+  <div class="run-info">
+    {% if run_at %}
+      <div>Last run: {{ run_at }}</div>
+    {% endif %}
+    <a href="/eval-dashboard/run" class="run-btn" id="run-btn">▶ Run Evals</a>
+  </div>
+</header>
+
+<main class="main">
+
+  {% if results %}
+
+  <!-- Score Banner -->
+  <div class="score-banner">
+    <div class="score-card total">
+      <div class="metric">{{ total }}</div>
+      <div class="label">Total Scenarios</div>
+      <div class="sub">Personas tested</div>
+    </div>
+    <div class="score-card passed">
+      <div class="metric">{{ passed }}</div>
+      <div class="label">Passed</div>
+      <div class="sub">All assertions green</div>
+    </div>
+    <div class="score-card failed">
+      <div class="metric">{{ failed }}</div>
+      <div class="label">Failed</div>
+      <div class="sub">Need attention</div>
+    </div>
+    <div class="score-card rate">
+      <div class="metric">{{ pass_rate }}%</div>
+      <div class="label">Pass Rate</div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: {{ pass_rate }}%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MCP Endpoints -->
+  <p class="section-title">MCP Server Endpoints</p>
+  <div class="endpoints-section">
+    <h2>Available MCP Servers</h2>
+    <div class="endpoint-card">
+      <div class="endpoint-icon">👩</div>
+      <div>
+        <div class="ep-name">Citizen Assistant MCP</div>
+        <code class="ep-url">http://localhost:8001/mcp</code>
+        <div class="ep-desc">For AI assistants helping citizens apply for old age pension. Requires OAuth scope <code>citizen</code>.</div>
+        <div class="tool-list">
+          <span class="tool-chip">get_scheme_info</span>
+          <span class="tool-chip">check_eligibility</span>
+          <span class="tool-chip">request_otp</span>
+          <span class="tool-chip">submit_pension_application</span>
+          <span class="tool-chip">get_my_application_status</span>
+          <span class="tool-chip">withdraw_my_application</span>
+        </div>
+      </div>
+    </div>
+    <div class="endpoint-card">
+      <div class="endpoint-icon">🏛️</div>
+      <div>
+        <div class="ep-name">Block Officer MCP</div>
+        <code class="ep-url">http://localhost:8002/mcp</code>
+        <div class="ep-desc">For block officers reviewing, approving and rejecting applications. Requires OAuth scope <code>officer</code>. Citizens cannot access these tools.</div>
+        <div class="tool-list">
+          <span class="tool-chip">list_my_queue</span>
+          <span class="tool-chip">view_application</span>
+          <span class="tool-chip">approve_application</span>
+          <span class="tool-chip">reject_application</span>
+          <span class="tool-chip">get_dashboard_summary</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Persona results -->
+  <p class="section-title">
+    Eval Scenarios
+    <span class="badge">{{ total }} personas</span>
+  </p>
+
+  <div class="persona-grid">
+    {% for r in results %}
+    {% set sc_class = {
+      'happy_path': 'sc-happy',
+      'eligibility_failure_age': 'sc-failure',
+      'eligibility_failure_block': 'sc-failure',
+      'validation_error': 'sc-validation',
+      'validation_error_then_success': 'sc-validation',
+      'duplicate_application': 'sc-duplicate',
+      'officer_approval': 'sc-officer',
+      'withdraw_and_reapply': 'sc-withdraw'
+    }.get(r.scenario_type, 'sc-happy') %}
+    {% set avatar_map = {
+      'happy_path': ('👵', '#e8f5e9'),
+      'eligibility_failure_age': ('👴', '#ffebee'),
+      'eligibility_failure_block': ('👩', '#ffebee'),
+      'validation_error': ('📝', '#fff3e0'),
+      'validation_error_then_success': ('✅', '#e8f5e9'),
+      'duplicate_application': ('🔄', '#e3f2fd'),
+      'officer_approval': ('🏛️', '#f3e5f5'),
+      'withdraw_and_reapply': ('↩️', '#e0f2f1')
+    } %}
+    {% set av = avatar_map.get(r.scenario_type, ('👤', '#f5f5f5')) %}
+
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-avatar" style="background: {{ av[1] }}">{{ av[0] }}</div>
+        <div class="info">
+          <h3>{{ r.persona_name }}</h3>
+          <div class="meta">
+            <span>ID: {{ r.persona_id }}</span>
+          </div>
+          <span class="scenario-badge {{ sc_class }}">{{ r.scenario_type.replace('_', ' ') }}</span>
+        </div>
+        <div class="persona-status">
+          {% if r.passed %}
+            <span class="badge-pass">✓ PASS</span>
+          {% else %}
+            <span class="badge-fail">✗ FAIL</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="persona-body">
+        <p class="backstory">{{ r.backstory }}</p>
+
+        <div class="intent-box">
+          <strong>Intent:</strong>
+          {{ r.intent }}
+        </div>
+
+        <div class="intent-box" style="background: #f3e5f5; border-color: #7b1fa2; color: #4a148c;">
+          <strong>Expected Outcome:</strong>
+          {{ r.expected_outcome }}
+        </div>
+
+        {% if r.steps %}
+        <div class="steps-list">
+          {% for step in r.steps %}
+          <div class="step-item">
+            <div class="step-dot {% if step.passed %}ok{% else %}fail{% endif %}">
+              {% if step.passed %}✓{% else %}✗{% endif %}
+            </div>
+            <div>
+              <div class="step-tool">{{ step.tool }}</div>
+              <div class="step-detail">
+                {% if step.output is mapping %}
+                  {% for k, v in step.output.items() %}
+                    <span>{{ k }}={{ (v | string) | truncate(40) }}</span>
+                  {% endfor %}
+                {% else %}
+                  {{ step.output | string | truncate(80) }}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if r.eval_checks %}
+        <div class="checks-section">
+          <div class="checks-title">Assertions</div>
+          {% for check in r.eval_checks %}
+          <div class="check-item">
+            {% if r.passed %}
+              <span class="check-ok">✓</span>
+            {% else %}
+              <span class="check-fail">✗</span>
+            {% endif %}
+            {{ check }}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if not r.passed and r.reason %}
+        <div style="background: var(--red-light); border-left: 3px solid var(--red); padding: 10px 14px; border-radius: 0 6px 6px 0; margin-top: 12px; font-size: 12px; color: var(--red);">
+          <strong>Failure:</strong> {{ r.reason }}
+        </div>
+        {% endif %}
+
+        <div class="elapsed">⏱ {{ r.elapsed_seconds }}s · Run: {{ r.run_at[:19] if r.run_at else 'N/A' }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Insights -->
+  <p class="section-title">What We Learned</p>
+  <div class="insights-section">
+    <h2>Design Insights from Eval Runs</h2>
+    <p class="subtitle">Key findings from testing the MCP servers against real citizen scenarios</p>
+
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="ic-icon">🛡️</div>
+        <h4>Validation Parity is Critical</h4>
+        <p>MCP tools must enforce identical validation to the web portal. Early eval runs caught a case where the bank account regex wasn't applied — fixed by using the shared <code>portal_db.validate_application()</code> function in both channels.</p>
+      </div>
+      <div class="insight-card">
+        <div class="ic-icon">📱</div>
+        <h4>OTP Flow for Elderly Users</h4>
+        <p>Elderly citizens on shared phones may not immediately have the OTP. The assistant must ask, wait, and confirm rather than timing out. We added explicit guidance in the tool description for AI clients to handle OTP retrieval gracefully.</p>
+      </div>
+      <div class="insight-card">
+        <div class="ic-icon">🔀</div>
+        <h4>Separation of MCP Endpoints</h4>
+        <p>Running citizen and officer servers on separate ports (8001 vs 8002) enforces the access boundary at the network level. No citizen token can accidentally reach officer tools even if the AI agent tries.</p>
+      </div>
+      <div class="insight-card">
+        <div class="ic-icon">📋</div>
+        <h4>Audit Trail Completeness</h4>
+        <p>Every MCP action writes to <code>audit_log</code> with the actor prefixed <code>citizen:</code> or <code>officer:</code>, making MCP-originated actions distinguishable from web portal actions in the admin view.</p>
+      </div>
+      <div class="insight-card">
+        <div class="ic-icon">⚠️</div>
+        <h4>Age Proof via MCP</h4>
+        <p>AI-submitted applications flag doc_path as <code>mcp_verbal_declaration</code>. Officers are shown a clear warning in the officer assistant view, prompting them to request the physical document before approving.</p>
+      </div>
+      <div class="insight-card">
+        <div class="ic-icon">🌐</div>
+        <h4>Block Validation Early</h4>
+        <p>The <code>check_eligibility</code> tool eliminates wasted OTP flow for citizens in ineligible blocks. Eval showed this prevents frustration for citizens in Guwahati who heard about the scheme but aren't in covered blocks.</p>
+      </div>
+    </div>
+  </div>
+
+  {% else %}
+  <div class="no-data">
+    <div class="icon">🧪</div>
+    <h3>No Eval Results Yet</h3>
+    <p>Click "Run Evals" above to run the eval suite against the MCP servers.<br>
+    Results will appear here after the first run.</p>
+    <br>
+    <a href="/eval-dashboard/run" class="page-header run-btn" style="margin: 0 auto; display: inline-block;">▶ Run Evals Now</a>
+  </div>
+  {% endif %}
+
+</main>
+
+<footer>
+  Sewa Setu MCP Eval Dashboard · Department of Social Welfare, Government of Purvanchal
+  · <a href="/" style="color: rgba(255,255,255,0.5)">Portal</a>
+  · <a href="/admin/dashboard" style="color: rgba(255,255,255,0.5)">Admin</a>
+</footer>
+
+<script>
+  // Animate progress bar
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.progress-fill').forEach(bar => {
+      const w = bar.style.width;
+      bar.style.width = '0';
+      setTimeout(() => bar.style.width = w, 100);
+    });
+  });
+
+  // Run button with loading state
+  document.getElementById('run-btn')?.addEventListener('click', function(e) {
+    this.textContent = '⏳ Running...';
+    this.style.pointerEvents = 'none';
+    this.style.opacity = '0.7';
+  });
+</script>
+</body>
+</html>

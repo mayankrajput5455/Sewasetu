@@ -1,0 +1,20 @@
+# Environments & Virtualenvs
+.venv/
+env/
+venv/
+ENV/
+
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Local database / scratch
+setup_db.py
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db

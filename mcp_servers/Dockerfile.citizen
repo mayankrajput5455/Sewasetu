@@ -1,0 +1,17 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy mcp_servers content
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+# The portal_db.py reads ../app/config/app.ini relative to mcp_servers/.
+# In Docker, we mount via environment variables (DB_HOST etc.) so the ini is
+# only needed for the config keys without db connectivity; set sensible defaults.
+# The DB connection is configured entirely via DB_HOST/DB_PORT/DB_NAME/DB_USER/DB_PASSWORD env vars.
+
+EXPOSE 8001
+CMD ["python", "citizen_mcp.py"]
