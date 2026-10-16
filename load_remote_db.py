@@ -8,6 +8,8 @@ Usage:
 
 import sys
 import os
+import io
+import time
 import psycopg2
 
 def load_db(conn_str: str):
@@ -18,27 +20,55 @@ def load_db(conn_str: str):
     conn.autocommit = True
     cur = conn.cursor()
 
-    # 1. Schema
+    # 1. Apply Schema
     schema_path = os.path.join(os.path.dirname(__file__), "app", "schema.sql")
     print(f"Applying schema from {schema_path}...")
     with open(schema_path, "r", encoding="utf-8") as f:
         schema_sql = f.read()
     cur.execute(schema_sql)
-    print("✓ Schema applied successfully!")
+    print("[OK] Schema applied successfully!")
 
-    # 2. Seed data
+    # 2. Apply Seed Data via COPY protocol
     seed_path = os.path.join(os.path.dirname(__file__), "seed", "seed.sql")
-    print(f"Loading production seed data from {seed_path} (~35 MB)...")
+    print(f"Streaming production seed data from {seed_path}...")
+    
+    t0 = time.time()
     with open(seed_path, "r", encoding="utf-8") as f:
-        # Load seed statements
-        seed_sql = f.read()
-    cur.execute(seed_sql)
-    print("✓ Seed data loaded successfully!")
+        current_copy_sql = None
+        current_buffer = []
+        for line in f:
+            if line.startswith("COPY "):
+                current_copy_sql = line.strip().rstrip(";")
+                current_buffer = []
+            elif line.strip() == r"\.":
+                if current_copy_sql:
+                    table_name = current_copy_sql.split()[1]
+                    print(f"  -> Ingesting {len(current_buffer):,} rows into {table_name}...")
+                    stream = io.StringIO("".join(current_buffer))
+                    cur.copy_expert(f"{current_copy_sql};", stream)
+                    print(f"  [OK] {table_name} loaded ({len(current_buffer):,} records)")
+                    current_copy_sql = None
+                    current_buffer = []
+            elif current_copy_sql:
+                current_buffer.append(line)
+            elif line.startswith("SELECT setval"):
+                cur.execute(line)
 
-    # Verify counts
+    elapsed = round(time.time() - t0, 1)
+    print(f"[OK] All seed data loaded successfully in {elapsed}s!")
+
+    # 3. Verify counts
     cur.execute("SELECT count(*) FROM applications")
     apps_count = cur.fetchone()[0]
-    print(f"✓ Verification: {apps_count:,} applications now in remote database.")
+    cur.execute("SELECT count(*) FROM portal_users")
+    users_count = cur.fetchone()[0]
+    cur.execute("SELECT count(*) FROM audit_log")
+    audit_count = cur.fetchone()[0]
+
+    print("\nVerification Checklist:")
+    print(f"  [OK] applications: {apps_count:,} rows")
+    print(f"  [OK] portal_users: {users_count:,} rows")
+    print(f"  [OK] audit_log:    {audit_count:,} rows")
 
     cur.close()
     conn.close()
